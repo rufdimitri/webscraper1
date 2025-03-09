@@ -56,3 +56,8 @@ class BooksItem(scrapy.Item):
 Created spider 'book' using template 'basic' in module:
   books.spiders.book
 ```
+**Run spider**
+```
+(venv) $ cd books/
+(venv) $ scrapy crawl <spider-name>
+```
