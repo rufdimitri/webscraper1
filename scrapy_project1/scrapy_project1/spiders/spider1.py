@@ -33,8 +33,26 @@ class Spider1Spider(scrapy.Spider):
 
     def parseAndFillLaptopData(self, response):
         laptop = response.meta["item"]
-        print(f"parseAndFillLaptopData: laptop.link={laptop['link']}")
-        laptop["price"] = "hello from parseAndFillLaptopData"
+
+        laptop["title"] = response.css('#wrapper > div > section > div > div > div > div > div > div > h1 > span[data-test="product-name"]::text').get().strip()
+
+        laptop["price"] = response.css('#wrapper > div > section > div > div > div > div > div > div > div > div > div > p[data-test="product-price"] > span::text').get()
+        
+        table_rows = response.css('#tab-spezifikationen > dl > div[data-test="details-attribute"]')
+        for row in table_rows:
+            attribute = row.css('dt::text').get().strip()
+            value = row.css('dd::text').get().strip()
+            if "Grafikkarte" == attribute:
+                laptop["graphics"] = value
+            if "Prozessor" == attribute:
+                laptop["cpu"] = value
+            if "Festplattenart" == attribute: 
+                laptop["storage_type"] = value
+            if "Speicherplatz" == attribute:
+                laptop["storage"] = value
+            if "Gewicht" == attribute:
+                laptop["weight"] = value
+        
         yield laptop
     
 

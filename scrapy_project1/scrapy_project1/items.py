@@ -17,3 +17,6 @@ class LaptopItem(scrapy.Item):
     link = scrapy.Field()
     cpu = scrapy.Field()
     graphics = scrapy.Field()
+    storage_type = scrapy.Field()
+    storage = scrapy.Field()
+    weight = scrapy.Field()
