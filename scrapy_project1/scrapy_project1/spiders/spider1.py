@@ -15,21 +15,38 @@ class Spider1Spider(scrapy.Spider):
 
 
     def parse(self, response):
-        print(f"response-url: {response.url}")
-        print(f"response-status: {response.status}")
         article_list = response.css("article")
+        if len(article_list) <= 0:
+            return
         for article in article_list:
             laptop = LaptopItem()
             link = article.css("a::attr(href)").get()
             full_link = response.urljoin(link)
-            laptop["link"] = full_link
-            laptop["price"] = "0"
+            laptop["url"] = full_link
             
             request = scrapy.Request(url=full_link, callback=self.parseAndFillLaptopData)
             request.meta["item"] = laptop
             yield request
-            break #DEBUG only parse for 1st laptop 
-
+        
+        yield scrapy.Request(url=self.next_page_url(response.url), callback=self.parse)
+        
+    def next_page_url(self, current_page_url):
+        index = max(current_page_url.find("&page="), current_page_url.find("?page="))
+        if index < 0:
+            raise RuntimeError("Url doesnt contain page parameter, can't calculate next page")
+        page_number = ""
+        start_index = index+len("&page=")
+        end_index = 0
+        for i in range(start_index, len(current_page_url)):
+            char1 = current_page_url[i]
+            if char1 in "0123456789":
+                page_number += char1
+            else:
+                end_index = i
+                break
+        next_page = int(page_number) + 1 
+        next_page_url = current_page_url[0:start_index] + str(next_page) + current_page_url[end_index:]       
+        return next_page_url
 
     def parseAndFillLaptopData(self, response):
         laptop = response.meta["item"]

@@ -7,6 +7,9 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+MONGO_URI = "mongodb://localhost:27017"
+MONGO_DATABASE = "laptops_db"
+
 BOT_NAME = "scrapy_project1"
 
 SPIDER_MODULES = ["scrapy_project1.spiders"]
@@ -62,9 +65,9 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "scrapy_project1.pipelines.ScrapyProject1Pipeline": 300,
-#}
+ITEM_PIPELINES = {
+   "scrapy_project1.pipelines.MongoPipeline": 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

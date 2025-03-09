@@ -12,9 +12,10 @@ class ScrapyProject1Item(scrapy.Item):
     pass
 
 class LaptopItem(scrapy.Item):
+    _id = scrapy.Field()
     title = scrapy.Field()
     price = scrapy.Field()
-    link = scrapy.Field()
+    url = scrapy.Field()
     cpu = scrapy.Field()
     graphics = scrapy.Field()
     storage_type = scrapy.Field()
